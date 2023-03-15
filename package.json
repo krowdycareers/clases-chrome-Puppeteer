@@ -1,0 +1,15 @@
+{
+  "name": "puppeteer",
+  "version": "1",
+  "description": "clase demo de puppeteer",
+  "main": "index.js",
+  "repository": "git@github.com:krowdycareers/clases-chrome-Puppeteer.git",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "puppeteer": "^19.7.5",
+    "puppeteer-core": "^19.7.5"
+  }
+}
