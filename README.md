@@ -4,5 +4,10 @@
 
 ```bash
 npm install
-npm run start
+
+# Development
+npm run dev
+
+# Production
+docker compose up
 ```

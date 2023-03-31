@@ -6,10 +6,15 @@
   "repository": "git@github.com:krowdycareers/clases-chrome-Puppeteer.git",
   "license": "MIT",
   "scripts": {
-    "start": "node ./src/index.js"
+    "dev": "cross-env NODE_ENV=development npx nodemon ./src/index.js",
+    "start": "cross-env NODE_ENV=production node ./src/index.js"
   },
   "dependencies": {
+    "cross-env": "^7.0.3",
     "puppeteer": "^19.7.5",
     "puppeteer-core": "^19.7.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }

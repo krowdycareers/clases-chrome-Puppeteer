@@ -1,12 +1,29 @@
+const { production } = require("./config");
+
 const puppeteer = require("puppeteer");
 const path = require("path");
 
 (async () => {
-    const browser = await puppeteer.launch({
-        headless: false,
-        defaultViewport: null,
-        args: ["--start-maximized"]
-    });
+    let options = {
+        headless: production,
+        defaultViewport: { 
+            width: 1280, 
+            height: 1600 
+        }
+    }
+
+    if(production) {
+        options = {
+            ...options,
+            executablePath: '/usr/bin/google-chrome', 
+            args: [
+                "--no-sandbox",
+                "--disable-gpu",
+            ]
+        }
+    }
+
+    const browser = await puppeteer.launch(options);
 
     const page = await browser.newPage();
     await page.goto("https://api.regulaforensics.com/?utm_source=docs");
@@ -41,6 +58,9 @@ const path = require("path");
 
         return accumulator;
     }, {});
+
+    await page.close();
+    await browser.close();
 
     console.log(dniInformation);
 })();
