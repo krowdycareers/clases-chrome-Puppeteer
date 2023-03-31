@@ -1,52 +1,46 @@
 const puppeteer = require("puppeteer");
+const path = require("path");
 
 (async () => {
-    const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
-    await page.goto("https://www.occ.com.mx/empleos/");
-
-    const result = await page.evaluate(function getInformationRelatedToJobsFromDocument() {
-        const jobCards = Array.from(document.querySelectorAll("[class*='cardContent']"));
-        const jobs = jobCards.map((jobCard) => {
-            const [
-                publicationDetailsContainer,
-                titleContainer,
-                salaryContainer
-            ] = jobCard.children;
-    
-            const [publishedAt, recommeded] = publicationDetailsContainer.innerText.split("\n");
-    
-            return {
-                publishedAt: publishedAt,
-                recommended: Boolean(recommeded),
-                title: titleContainer.innerText,
-                salary: extractSalaryDetails(salaryContainer.innerText)
-            };
-
-            function extractSalaryDetails(salaryDetails = "") {
-                // $16,000 - $18,000 Mensual
-                const result = salaryDetails.match(/^\$(.+) - \$(.+) Mensual/);
-            
-                if(!result) {
-                    return {
-                        hasSalaryDetails: false,
-                        message: salaryDetails
-                    };
-                }
-            
-                const [, minSalaryString, maxSalaryString] = result;
-                const [minSalary, maxSalary] = [Number.parseInt(minSalaryString.replace(",", "")), Number.parseInt(maxSalaryString.replace(",", ""))];
-            
-                return {
-                    hasSalaryDetails: true,
-                    minSalary,
-                    maxSalary
-                };
-            }
-        });
-        
-        return jobs;
+    const browser = await puppeteer.launch({
+        headless: false,
+        defaultViewport: null,
+        args: ["--start-maximized"]
     });
 
-    console.log(result);
+    const page = await browser.newPage();
+    await page.goto("https://api.regulaforensics.com/?utm_source=docs");
+
+    const fileElement = await page.$(".upload-data>input[type=file]");
+    await fileElement.uploadFile(path.join(__dirname, "uploads", "dni.jpeg"));
+
+    const selectorRowsInformation = "tbody > tr";
+    await page.waitForSelector(selectorRowsInformation);
+
+    const dniPairs = await page.evaluate((selectorRowsInformation) => {
+        const rowElements = [...document.querySelectorAll(selectorRowsInformation)];
+        const dniPairs = rowElements.map((rowElement) => {
+            const [
+                { innerText: attribute },
+                { innerText: MRZ },
+                { innerText: visualZone }
+            ] = rowElement.children;
+
+            const value = MRZ !== "" ? MRZ : visualZone;
+           
+            return { attribute, value };
+        });
+
+        return dniPairs;
+    }, selectorRowsInformation);
+
+    const dniInformation = dniPairs.reduce((accumulator, current) => {
+        const { attribute, value } = current;
+    
+        accumulator[attribute] = value;
+
+        return accumulator;
+    }, {});
+
+    console.log(dniInformation);
 })();
