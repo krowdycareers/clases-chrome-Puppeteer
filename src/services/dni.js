@@ -42,7 +42,6 @@ class DNIService {
             await page.goto("https://api.regulaforensics.com/?utm_source=docs");
 
             const fileElement = await page.$(".upload-data>input[type=file]");
-			console.log(path.join(__dirname, "..", "tmp", filePath));
             await fileElement.uploadFile(path.join(filePath));
 
             const selectorRowsInformation = "tbody > tr";
