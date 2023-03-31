@@ -1,5 +1,6 @@
 FROM node:18
 
+ENV PORT=4000
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 RUN apt-get update && apt-get install gnupg wget -y && \
@@ -16,5 +17,7 @@ COPY package*.json .
 RUN npm install
 
 COPY ./src ./src
+
+EXPOSE ${PORT}
 
 CMD ["npm", "run", "start"]

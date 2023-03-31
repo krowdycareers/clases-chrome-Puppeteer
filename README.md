@@ -3,11 +3,11 @@
 # Getting Started
 
 ```bash
-npm install
+make install # npm install
 
 # Development
-npm run dev
+make dev # npm run dev
 
 # Production
-docker compose up
+make prod # docker compose up
 ```

@@ -6,15 +6,25 @@
   "repository": "git@github.com:krowdycareers/clases-chrome-Puppeteer.git",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development npx nodemon ./src/index.js",
-    "start": "cross-env NODE_ENV=production node ./src/index.js"
+    "dev": "cross-env NODE_ENV=development npx nodemon ./src/server.js",
+    "start": "cross-env NODE_ENV=production node ./src/server.js",
+    "lint": "npx eslint --ignore-path .gitignore . --ext .js",
+    "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
     "cross-env": "^7.0.3",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
+    "helmet": "^6.0.1",
+    "http-status": "^1.6.2",
     "puppeteer": "^19.7.5",
     "puppeteer-core": "^19.7.5"
   },
   "devDependencies": {
+    "eslint": "^8.37.0",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.22"
   }
 }
