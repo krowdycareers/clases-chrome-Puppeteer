@@ -1,8 +1,8 @@
 const compression = require("compression");
 const cors = require("cors");
 const express = require("express");
-const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 const status = require("http-status");
 const morgan = require("morgan");
 

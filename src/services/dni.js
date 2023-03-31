@@ -1,9 +1,21 @@
+const fs = require("fs/promises");
 const path = require("path");
 const puppeteer = require("puppeteer");
 const { production } = require("../config");
 
 class DNIService {
-    async getExample() {
+    async scrap(file) {
+		if(!file) {
+			return {
+				success: false,
+				message: "DNI was not provided"
+			};
+		}
+
+		const ext = file.mimetype.replace("image/", "");
+		const filePath = `${file.tempFilePath}.${ext}`;
+		await fs.rename(file.tempFilePath, filePath);
+
         try {
             let options = {
                 headless: production,
@@ -30,7 +42,8 @@ class DNIService {
             await page.goto("https://api.regulaforensics.com/?utm_source=docs");
 
             const fileElement = await page.$(".upload-data>input[type=file]");
-            await fileElement.uploadFile(path.join(__dirname, "..", "uploads", "dni.jpeg"));
+			console.log(path.join(__dirname, "..", "tmp", filePath));
+            await fileElement.uploadFile(path.join(filePath));
 
             const selectorRowsInformation = "tbody > tr";
             await page.waitForSelector(selectorRowsInformation);
@@ -75,9 +88,11 @@ class DNIService {
 
             return {
                 success: false,
-                message: "A wild Error has appeared!"
+                message: "Couldn't process the DNI, maybe you didn't send one?"
             };
-        }
+        } finally {
+			await fs.unlink(filePath);
+		}
     }
 }
 
