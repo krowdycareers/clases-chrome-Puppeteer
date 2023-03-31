@@ -71,6 +71,8 @@ class DNIService {
                 dniInformation
             };
         } catch(error) {
+			console.log(error);
+
             return {
                 success: false,
                 message: "A wild Error has appeared!"

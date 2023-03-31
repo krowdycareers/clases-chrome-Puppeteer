@@ -1,9 +1,9 @@
 {
     "env": {
+        "browser": true,
         "commonjs": true,
         "es2021": true,
-        "node": true,
-        "browser": true
+        "node": true
     },
     "extends": "eslint:recommended",
     "overrides": [
@@ -14,8 +14,7 @@
     "rules": {
         "indent": [
             "error",
-            4,
-            { "SwitchCase": 1 }
+            "tab"
         ],
         "linebreak-style": [
             "error",
@@ -28,27 +27,27 @@
         "semi": [
             "error",
             "always"
-        ],
-        "camelcase":"error",
-        "curly":"error",
-        "default-case":"error",
-        "eqeqeq":"error",
-        "no-console":"warn",
-        "no-duplicate-imports":"error",
-        "no-new-func":"error",
-        "no-return-await":"error",
-        "no-unused-vars":"warn",
-        "no-var":"error",
-        "spaced-comment":"error",
-        "arrow-spacing":"error",
-        "block-spacing":"error",
-        "brace-style":["error","1tbs"],
-        "comma-spacing":"error",
-        "no-extra-parens":"error",
-        "no-multi-spaces":"error",
-        "no-multiple-empty-lines": "error",
-        "no-trailing-spaces":"error",
-        "object-property-newline":"error",
-        "comma-dangle": ["error", "never"]
-    }
+        ]
+    },
+	"camelcase":"error",
+	"curly":"error",
+	"default-case":"error",
+	"eqeqeq":"error",
+	"no-console":"warn",
+	"no-duplicate-imports":"error",
+	"no-new-func":"error",
+	"no-return-await":"error",
+	"no-unused-vars":"warn",
+	"no-var":"error",
+	"spaced-comment":"error",
+	"arrow-spacing":"error",
+	"block-spacing":"error",
+	"brace-style":["error","1tbs"],
+	"comma-spacing":"error",
+	"no-extra-parens":"error",
+	"no-multi-spaces":"error",
+	"no-multiple-empty-lines": "error",
+	"no-trailing-spaces":"error",
+	"object-property-newline":"error",
+	"comma-dangle": ["error", "never"]
 }
