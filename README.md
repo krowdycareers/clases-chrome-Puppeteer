@@ -1,13 +1,13 @@
-# clases-chrome-Puppeteer
+# ocr-scraper
 
 # Getting Started
 
 ```bash
-make install # npm install
+make install
 
 # Development
-make dev # npm run dev
+make dev
 
 # Production
-make prod # docker compose up
+make prod
 ```

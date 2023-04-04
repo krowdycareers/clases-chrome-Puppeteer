@@ -1,5 +1,5 @@
 {
-  "name": "puppeteer",
+  "name": "ocr-scraper",
   "version": "1",
   "description": "clase demo de puppeteer",
   "main": "index.js",

@@ -7,7 +7,7 @@ const status = require("http-status");
 const morgan = require("morgan");
 
 const { development } = require("./config");
-const dni = require("./routes/dni");
+const ocr = require("./routes/ocr");
 
 const app = express();
 
@@ -41,14 +41,14 @@ app.use(compression());
 
 app.get("/", (req, res) => {
     return res.status(status.OK).json({
-        name: "dni-scraper",
+        name: "ocr-scraper",
         version: "1.0.0",
         author: "Gustavo Eduardo Ordoño Poma"
     });
 });
 
 // Routes
-dni(app);
+ocr(app);
 
 app.all("*", (req, res) => {
     return res.status(status.NOT_FOUND).json({

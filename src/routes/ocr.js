@@ -1,23 +1,23 @@
 const path = require("path");
 const { Router } = require("express");
-const DNIService = require("../services/dni");
+const OCRService = require("../services/ocr");
 const fileUpload = require("express-fileupload");
 const status = require("http-status");
 
-function dni(app) {
+function ocr(app) {
     const router = Router();
-    const dniServ = new DNIService();
+    const ocrServ = new OCRService();
 
-    app.use("/api/dni", router);
+    app.use("/api/ocr", router);
 
-    router.post("/", fileUpload({
+    router.post("/dni", fileUpload({
 		useTempFiles: true,
 		tempFileDir: path.join(__dirname, "..", "tmp")
 	}), async (req, res) => {
-        const result = await dniServ.scrap(req.files?.dni);
+        const result = await ocrServ.scrapDNI(req.files?.dni);
 
         return res.status(result.success ? status.OK : status.BAD_REQUEST).json(result);
     });
 }
 
-module.exports = dni;
+module.exports = ocr;

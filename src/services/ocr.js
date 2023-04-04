@@ -3,8 +3,8 @@ const path = require("path");
 const puppeteer = require("puppeteer");
 const { production } = require("../config");
 
-class DNIService {
-    async scrap(file) {
+class OCRService {
+    async scrapDNI(file) {
 		if(!file) {
 			return {
 				success: false,
@@ -87,7 +87,7 @@ class DNIService {
 
             return {
                 success: false,
-                message: "Couldn't process the DNI, maybe you didn't send one?"
+                message: "Couldn't process the DNI, maybe you didn't send one? or it wasn't a valid DNI"
             };
         } finally {
 			await fs.unlink(filePath);
@@ -95,4 +95,4 @@ class DNIService {
     }
 }
 
-module.exports = DNIService;
+module.exports = OCRService;
