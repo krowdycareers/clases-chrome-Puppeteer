@@ -4,7 +4,7 @@ const puppeteer = require("puppeteer");
 const { production } = require("../config");
 
 class OCRService {
-    async scrapDNI(file) {
+	async scrapDNI(file) {
 		if(!file) {
 			return {
 				success: false,
@@ -16,83 +16,83 @@ class OCRService {
 		const filePath = `${file.tempFilePath}.${ext}`;
 		await fs.rename(file.tempFilePath, filePath);
 
-        try {
-            let options = {
-                headless: production,
-                defaultViewport: {
-                    width: 1280,
-                    height: 1600
-                }
-            };
+		try {
+			let options = {
+				headless: production,
+				defaultViewport: {
+					width: 1280,
+					height: 1600
+				}
+			};
 
-            if(production) {
-                options = {
-                    ...options,
-                    executablePath: "/usr/bin/google-chrome",
-                    args: [
-                        "--no-sandbox",
-                        "--disable-gpu"
-                    ]
-                };
-            }
+			if(production) {
+				options = {
+					...options,
+					executablePath: "/usr/bin/google-chrome",
+					args: [
+						"--no-sandbox",
+						"--disable-gpu"
+					]
+				};
+			}
 
-            const browser = await puppeteer.launch(options);
+			const browser = await puppeteer.launch(options);
 
-            const page = await browser.newPage();
-            await page.goto("https://api.regulaforensics.com/?utm_source=docs");
+			const page = await browser.newPage();
+			await page.goto("https://api.regulaforensics.com/?utm_source=docs");
 
-            const fileElement = await page.$(".upload-data>input[type=file]");
-            await fileElement.uploadFile(path.join(filePath));
+			const fileElement = await page.$(".upload-data>input[type=file]");
+			await fileElement.uploadFile(path.join(filePath));
 
-            const selectorRowsInformation = "tbody > tr";
-            await page.waitForSelector(selectorRowsInformation);
+			const selectorRowsInformation = "tbody > tr";
+			await page.waitForSelector(selectorRowsInformation);
 
-            const dniPairs = await page.evaluate((selectorRowsInformation) => {
-                const rowElements = [...document.querySelectorAll(selectorRowsInformation)];
-                const dniPairs = rowElements.map((rowElement) => {
-                    const [
-                        { innerText: attribute },
-                        { innerText: MRZ },
-                        { innerText: visualZone }
-                    ] = rowElement.children;
+			const dniPairs = await page.evaluate((selectorRowsInformation) => {
+				const rowElements = [...document.querySelectorAll(selectorRowsInformation)];
+				const dniPairs = rowElements.map((rowElement) => {
+					const [
+						{ innerText: attribute },
+						{ innerText: MRZ },
+						{ innerText: visualZone }
+					] = rowElement.children;
 
-                    const value = MRZ !== "" ? MRZ : visualZone;
+					const value = MRZ !== "" ? MRZ : visualZone;
 
-                    return {
-                        attribute,
-                        value
-                    };
-                });
+					return {
+						attribute,
+						value
+					};
+				});
 
-                return dniPairs;
-            }, selectorRowsInformation);
+				return dniPairs;
+			}, selectorRowsInformation);
 
-            const dniInformation = dniPairs.reduce((accumulator, current) => {
-                const { attribute, value } = current;
+			const dniInformation = dniPairs.reduce((accumulator, current) => {
+				const { attribute, value } = current;
 
-                accumulator[attribute] = value;
+				accumulator[attribute] = value;
 
-                return accumulator;
-            }, {});
+				return accumulator;
+			}, {});
 
-            await page.close();
-            await browser.close();
+			await page.close();
+			await browser.close();
 
-            return {
-                success: true,
-                dniInformation
-            };
-        } catch(error) {
+			return {
+				success: true,
+				dniInformation
+			};
+		} catch(error) {
 			console.log(error);
 
-            return {
-                success: false,
-                message: "Couldn't process the DNI, maybe you didn't send one? or it wasn't a valid DNI"
-            };
-        } finally {
+			return {
+				success: false,
+				message: "Couldn't process the DNI, maybe you didn't send one? or it wasn't a valid DNI"
+			};
+		} finally {
 			await fs.unlink(filePath);
 		}
-    }
+	}
 }
 
 module.exports = OCRService;
